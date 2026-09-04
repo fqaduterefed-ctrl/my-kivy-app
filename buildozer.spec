@@ -16,7 +16,8 @@ source.dir = .
 source.include_exts = py,png,jpg,kv,atlas,ttf,otf
 
 # (list) Application requirements
-requirements = python3,kivy,cython
+# ⚠️ ማስተካከያ 1: Cython ስሪት መወሰን አለበት። ለ Kivy አብዛኛውን ጊዜ cython==0.29.33 ይመረጣል
+requirements = python3,kivy==2.3.0,cython==0.29.33
 
 # (str) Application versioning (method 1)
 version = 0.1
@@ -29,7 +30,12 @@ orientation = portrait
 # -----------------------------------------------------------------------------
 
 # (int) Target Android API
+# ⚠️ ማስተካከያ 2: API 33 እና 34 መረጋጋት እንዲኖራቸው የ NDK ስሪት በግልጽ መጻፍ አለበት
 android.api = 33
+
+# (str) Android NDK version
+# ⚠️ ማስተካከያ 3: ይህንን አዲስ መስመር ከ android.api በታች ጨምረው (የእስካሁኑ ስህተት መፍትሄ ነው)
+android.ndk = 25b
 
 # (int) Minimum API your APK / AAB will support.
 android.minapi = 24
