@@ -18,20 +18,31 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Install Android SDK and Tools
+        uses: android-actions/setup-android@v3
+
       - name: Install Buildozer dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y git zip unzip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev gcc g++ make
           pip install --upgrade pip
-          # የ Cython ስሪት ግጭትን ለመፍታት በትክክለኛው ስሪት መጫን
-          pip install "cython<3.0.0" virtualenv buildozer kivy
+          pip install "cython<3.0.0" buildozer kivy
+
+      - name: Configure Android SDK Path for Buildozer
+        run: |
+          mkdir -p ~/.buildozer/android/platform/
+          # የ GitHub Actions አንድሮይድ SDKን ለ Buildozer ማገናኘት
+          ln -s $ANDROID_HOME ~/.buildozer/android/platform/android-sdk
+          # sdkmanager በትክክል መስራቱን ማረጋገጥ
+          sdkmanager --list || true
 
       - name: Force Accept All Android SDK Licenses
         run: |
+          yes | sdkmanager --licenses || true
           declare -a paths=(
             "$HOME/.android"
             "$HOME/.buildozer/android/platform/android-sdk/licenses"
-            "/usr/local/lib/android/sdk/licenses"
+            "$ANDROID_HOME/licenses"
           )
           for path in "${paths[@]}"; do
             mkdir -p "$path"
@@ -45,7 +56,8 @@ jobs:
           export BUILDOZER_ALLOW_ORG_TEST_DOMAIN=1
           export APP_ANDROID_ACCEPT_SDK_LICENSE=1
           export ANDROID_AUTO_ACCEPT_SDK_LICENSES=1
-          yes | buildozer android debug
+          # ቢልዱ የት ላይ እንደሚቆም ለማየት በ verbose mode (v) ማሄድ
+          buildozer -v android debug
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
