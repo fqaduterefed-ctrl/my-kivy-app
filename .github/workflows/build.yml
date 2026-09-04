@@ -12,21 +12,40 @@ jobs:
         with:
           python-version: '3.10'
 
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
       - name: Install Buildozer dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y git zip unzip openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev gcc g++ make
+          sudo apt-get install -y git zip unzip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev gcc g++ make
           pip install --upgrade pip
-          pip install buildozer cython virtualenv kivy
+          # የ Cython ስሪት ግጭትን ለመፍታት በትክክለኛው ስሪት መጫን
+          pip install "cython<3.0.0" virtualenv buildozer kivy
+
+      - name: Force Accept All Android SDK Licenses
+        run: |
+          declare -a paths=(
+            "$HOME/.android"
+            "$HOME/.buildozer/android/platform/android-sdk/licenses"
+            "/usr/local/lib/android/sdk/licenses"
+          )
+          for path in "${paths[@]}"; do
+            mkdir -p "$path"
+            touch "$path/repositories.cfg"
+            echo -e "24a0d6de8bce47b86b8b13a69a41a4a50ca87a5d\n56d0ee80235170ca334d081594699a9b31f56ee3\n859f317696f67ef3d7f1d86e85758417387c7aab\n2844d116bda534eaaccd60614f2c38a9545d7b58\nd56f5187479451eabf01fb74bf679004a47cd5db\n6610a8fb569e55c0e14a1a901321a6a1d716e228" > "$path/android-sdk-license"
+          done
 
       - name: Build with Buildozer
         run: |
           git config --global --add safe.directory '*'
-          mkdir -p ~/.android
-          touch ~/.android/repositories.cfg
           export BUILDOZER_ALLOW_ORG_TEST_DOMAIN=1
           export APP_ANDROID_ACCEPT_SDK_LICENSE=1
-          buildozer android debug
+          export ANDROID_AUTO_ACCEPT_SDK_LICENSES=1
+          yes | buildozer android debug
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
