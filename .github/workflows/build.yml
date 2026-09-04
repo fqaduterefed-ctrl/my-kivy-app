@@ -28,14 +28,31 @@ jobs:
           pip install --upgrade pip
           pip install cython buildozer kivy
 
+      - name: Set up Android SDK (Required to auto-accept licenses)
+        uses: android-actions/setup-android@v3
+
+      - name: Force Accept All Android SDK Licenses
+        run: |
+          # የሲስተሙን ፍቃዶች በሙሉ በ 'yes' ትዕዛዝ አስገድዶ መቀበል
+          yes | sdkmanager --licenses || true
+          
+          # ለ Buildozer ማውጫዎች ፈቃዶችን አስቀድሞ መፍጠር
+          mkdir -p ~/.android
+          touch ~/.android/repositories.cfg
+          
+          mkdir -p ~/.buildozer/android/platform/android-sdk/licenses
+          if [ -d "$ANDROID_HOME/licenses" ]; then
+            cp -r $ANDROID_HOME/licenses ~/.buildozer/android/platform/android-sdk/
+          fi
+
       - name: Build with Buildozer
         run: |
           git config --global --add safe.directory '*'
           export BUILDOZER_ALLOW_ORG_TEST_DOMAIN=1
           export APP_ANDROID_ACCEPT_SDK_LICENSE=1
           export ANDROID_AUTO_ACCEPT_SDK_LICENSES=1
-          # Buildozer ራሱ ሁሉንም SDK/NDK አውርዶ እንዲያስተካክል መፍቀድ
-          buildozer -v android debug
+          # ሁለቱንም አማራጮች በመጠቀም ፍቃዱን ማለፍ
+          yes | buildozer -v android debug
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
