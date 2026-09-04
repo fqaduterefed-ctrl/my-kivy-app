@@ -34,7 +34,6 @@ jobs:
       - name: Link GitHub Android NDK to Buildozer (Fixes Timeout)
         run: |
           mkdir -p ~/.buildozer/android/platform/
-          # በ GitHub ማሽን ላይ ያለውን ዝግጁ NDK በቀጥታ ማገናኘት (7 ደቂቃ የሚፈጀውን ማውረድ ያስቀራል)
           if [ -d "$ANDROID_NDK_LATEST_HOME" ]; then
             ln -sf $ANDROID_NDK_LATEST_HOME ~/.buildozer/android/platform/android-ndk-r25b
           fi
@@ -45,15 +44,15 @@ jobs:
           mkdir -p ~/.android
           touch ~/.android/repositories.cfg
 
-      - name: Build with Buildozer
+      - name: Build with Buildozer (Quiet Mode to prevent RAM crash)
         run: |
           git config --global --add safe.directory '*'
           export BUILDOZER_ALLOW_ORG_TEST_DOMAIN=1
           export APP_ANDROID_ACCEPT_SDK_LICENSE=1
           export ANDROID_AUTO_ACCEPT_SDK_LICENSES=1
           
-          # ስህተት ካለ በግልጽ ለማየት አሁን verbose (-v) እንጠቀማለን
-          buildozer -v android debug
+          # ሎጉ ማሽኑን እንዳያጨናንቀው በስተጀርባ አሂደን ስህተት ካለ ብቻ ማሳየት
+          buildozer android debug > buildozer_output.log 2>&1 || (cat buildozer_output.log && exit 1)
           
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
