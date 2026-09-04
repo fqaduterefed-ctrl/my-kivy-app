@@ -12,7 +12,7 @@ package.domain = org.test
 # (str) Source code where the main.py live
 source.dir = .
 
-# (list) Source files to include (የአማርኛ ፎንቱ እንዲካተት ttf ተጨምሯል)
+# (list) Source files to include
 source.include_exts = py,png,jpg,kv,atlas,ttf,otf
 
 # (list) Application requirements
@@ -28,14 +28,11 @@ orientation = portrait
 # Android specific
 # -----------------------------------------------------------------------------
 
-# (int) Target Android API, should be as high as possible.
+# (int) Target Android API
 android.api = 33
 
 # (int) Minimum API your APK / AAB will support.
 android.minapi = 24
-
-# (str) Android NDK version to use
-android.ndk = 23b
 
 # (bool) Indicate if the application should be fullscreen or not
 fullscreen = 0
