@@ -31,6 +31,14 @@ jobs:
       - name: Set up Android SDK & NDK
         uses: android-actions/setup-android@v3
 
+      - name: Link GitHub Android NDK to Buildozer (Fixes Timeout)
+        run: |
+          mkdir -p ~/.buildozer/android/platform/
+          # በ GitHub ማሽን ላይ ያለውን ዝግጁ NDK በቀጥታ ማገናኘት (7 ደቂቃ የሚፈጀውን ማውረድ ያስቀራል)
+          if [ -d "$ANDROID_NDK_LATEST_HOME" ]; then
+            ln -sf $ANDROID_NDK_LATEST_HOME ~/.buildozer/android/platform/android-ndk-r25b
+          fi
+
       - name: Force Accept All Android SDK Licenses
         run: |
           yes | sdkmanager --licenses || true
@@ -44,8 +52,8 @@ jobs:
           export APP_ANDROID_ACCEPT_SDK_LICENSE=1
           export ANDROID_AUTO_ACCEPT_SDK_LICENSES=1
           
-          # Buildozer የራሱን NDK አውርዶ እንዲጭን ማዘዝ (Timeout እንዳይሆን ያለ verbose መሮጥ)
-          buildozer android debug
+          # ስህተት ካለ በግልጽ ለማየት አሁን verbose (-v) እንጠቀማለን
+          buildozer -v android debug
           
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
