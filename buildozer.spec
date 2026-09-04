@@ -15,11 +15,11 @@ source.dir = .
 # (list) Source files to include (plus Amharic font support)
 source.include_exts = py,png,jpg,kv,atlas,ttf,otf
 
+# (str) Application version (Required - This fixes the last error)
+version = 0.1
+
 # (list) Application requirements
 requirements = python3,kivy
-
-# (str) Custom source folders for requirements
-#requirements.source.kivy = ../kivy
 
 # (int) Target Android API
 android.api = 33
@@ -29,9 +29,6 @@ android.ndk = 25b
 
 # (int) Minimum API your APK will support
 android.minapi = 24
-
-# (int) Android SDK version to use
-#android.sdk = 33
 
 # (bool) Indicate if the application should be fullscreen or not
 fullscreen = 0
