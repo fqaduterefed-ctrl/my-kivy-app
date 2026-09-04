@@ -21,7 +21,7 @@ jobs:
       - name: Install System Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y git zip unzip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev gcc g++ make
+          sudo apt-get install -y git zip unzip p7zip-full autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev gcc g++ make
 
       - name: Install Python Tools (Latest updates)
         run: |
@@ -33,10 +33,7 @@ jobs:
 
       - name: Force Accept All Android SDK Licenses
         run: |
-          # የሲስተሙን ፍቃዶች በሙሉ በ 'yes' ትዕዛዝ አስገድዶ መቀበል
           yes | sdkmanager --licenses || true
-          
-          # ለ Buildozer ማውጫዎች ፈቃዶችን አስቀድሞ መፍጠር
           mkdir -p ~/.android
           touch ~/.android/repositories.cfg
           
@@ -45,13 +42,24 @@ jobs:
             cp -r $ANDROID_HOME/licenses ~/.buildozer/android/platform/android-sdk/
           fi
 
+      - name: Pre-download and Extract Android NDK (To prevent timeout/crash)
+        run: |
+          mkdir -p ~/.buildozer/android/platform
+          cd ~/.buildozer/android/platform
+          # NDK r25b ማውረድ እና በፈጣኑ 7z መፍታት
+          echo "⬇️ Downloading Android NDK..."
+          curl -L -o android-ndk.zip https://google.com
+          echo "📦 Extracting Android NDK using 7z..."
+          7z x android-ndk.zip -o. > /dev/null
+          mv android-ndk-r25b android-ndk-r25b-linux.zip # ለ Buildozer እንዲመች ስሙን ማስተካከል
+          rm android-ndk.zip
+
       - name: Build with Buildozer
         run: |
           git config --global --add safe.directory '*'
           export BUILDOZER_ALLOW_ORG_TEST_DOMAIN=1
           export APP_ANDROID_ACCEPT_SDK_LICENSE=1
           export ANDROID_AUTO_ACCEPT_SDK_LICENSES=1
-          # ሁለቱንም አማራጮች በመጠቀም ፍቃዱን ማለፍ
           yes | buildozer -v android debug
 
       - name: Upload APK Artifact
