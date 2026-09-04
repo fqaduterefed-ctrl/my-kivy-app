@@ -12,33 +12,26 @@ package.domain = org.test
 # (str) Source code where the main.py live
 source.dir = .
 
-# (list) Source files to include
+# (list) Source files to include (plus Amharic font support)
 source.include_exts = py,png,jpg,kv,atlas,ttf,otf
 
 # (list) Application requirements
-# ⚠️ ማስተካከያ 1: Cython ስሪት መወሰን አለበት። ለ Kivy አብዛኛውን ጊዜ cython==0.29.33 ይመረጣል
-requirements = python3,kivy==2.3.0,cython==0.29.33
+requirements = python3,kivy
 
-# (str) Application versioning (method 1)
-version = 0.1
-
-# (list) Supported orientations
-orientation = portrait
-
-# -----------------------------------------------------------------------------
-# Android specific
-# -----------------------------------------------------------------------------
+# (str) Custom source folders for requirements
+#requirements.source.kivy = ../kivy
 
 # (int) Target Android API
-# ⚠️ ማስተካከያ 2: API 33 እና 34 መረጋጋት እንዲኖራቸው የ NDK ስሪት በግልጽ መጻፍ አለበት
 android.api = 33
 
-# (str) Android NDK version
-# ⚠️ ማስተካከያ 3: ይህንን አዲስ መስመር ከ android.api በታች ጨምረው (የእስካሁኑ ስህተት መፍትሄ ነው)
+# (str) Android NDK version to use
 android.ndk = 25b
 
-# (int) Minimum API your APK / AAB will support.
+# (int) Minimum API your APK will support
 android.minapi = 24
+
+# (int) Android SDK version to use
+#android.sdk = 33
 
 # (bool) Indicate if the application should be fullscreen or not
 fullscreen = 0
@@ -52,13 +45,12 @@ android.accept_sdk_license = True
 # (str) The Android archs to build for
 android.archs = arm64-v8a, armeabi-v7a
 
-# (str) Format used to package the app for debug mode (apk or aab)
+# (str) Format used to package the app for debug mode
 android.debug_artifact = apk
 
-# (str) Format used to package the app for release mode (aab or apk)
+# (str) Format used to package the app for release mode
 android.release_artifact = apk
 
-# [buildozer]
 [buildozer]
 
 # (int) Log level (0 = error only, 1 = info, 2 = debug and command output)
