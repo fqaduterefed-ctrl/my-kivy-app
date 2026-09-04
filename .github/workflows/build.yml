@@ -21,14 +21,14 @@ jobs:
       - name: Install System Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y git zip unzip p7zip-full autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev gcc g++ make
+          sudo apt-get install -y git zip unzip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev gcc g++ make
 
       - name: Install Python Tools (Latest updates)
         run: |
           pip install --upgrade pip
           pip install cython buildozer kivy
 
-      - name: Set up Android SDK (Required to auto-accept licenses)
+      - name: Set up Android SDK & NDK
         uses: android-actions/setup-android@v3
 
       - name: Force Accept All Android SDK Licenses
@@ -36,23 +36,6 @@ jobs:
           yes | sdkmanager --licenses || true
           mkdir -p ~/.android
           touch ~/.android/repositories.cfg
-          
-          mkdir -p ~/.buildozer/android/platform/android-sdk/licenses
-          if [ -d "$ANDROID_HOME/licenses" ]; then
-            cp -r $ANDROID_HOME/licenses ~/.buildozer/android/platform/android-sdk/
-          fi
-
-      - name: Pre-download and Extract Android NDK (To prevent timeout/crash)
-        run: |
-          mkdir -p ~/.buildozer/android/platform
-          cd ~/.buildozer/android/platform
-          # NDK r25b ማውረድ እና በፈጣኑ 7z መፍታት
-          echo "⬇️ Downloading Android NDK..."
-          curl -L -o android-ndk.zip https://google.com
-          echo "📦 Extracting Android NDK using 7z..."
-          7z x android-ndk.zip -o. > /dev/null
-          mv android-ndk-r25b android-ndk-r25b-linux.zip # ለ Buildozer እንዲመች ስሙን ማስተካከል
-          rm android-ndk.zip
 
       - name: Build with Buildozer
         run: |
@@ -60,8 +43,10 @@ jobs:
           export BUILDOZER_ALLOW_ORG_TEST_DOMAIN=1
           export APP_ANDROID_ACCEPT_SDK_LICENSE=1
           export ANDROID_AUTO_ACCEPT_SDK_LICENSES=1
-          yes | buildozer -v android debug
-
+          
+          # Buildozer የራሱን NDK አውርዶ እንዲጭን ማዘዝ (Timeout እንዳይሆን ያለ verbose መሮጥ)
+          buildozer android debug
+          
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
