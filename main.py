@@ -1,4 +1,3 @@
-import subprocess
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.boxlayout import BoxLayout
@@ -7,20 +6,10 @@ from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
 
-# የወረደው የአማርኛ ፎንት ፋይል ስም
+# የወረደው የአማርኛ ፎንት ፋይል ስም (በሪፖዚተሪህ ውስጥ መኖሩን አረጋግጥ)
 AMHARIC_FONT = "AbyssinicaSIL-Regular.ttf"
 
-# እዚህ ጋር የእርስዎ የ FIDEL_MAP፣ TENEBABBI_ENC እና ANABABBI_ENC ዲክሽነሪዎች እንዳሉ ይቀጥላሉ...
-# (ስክሪንሾት ላይ የነበሩት የፊደል መለወጫ ኮዶች በሙሉ እዚህ ውስጥ ይሰራሉ)
-
-def send_via_termux(phone, msg):
-    try:
-        subprocess.run(["termux-sms-send", "-n", phone, msg], check=True)
-        return True
-    except:
-        return False
-
-# 1️⃣ ዲጂታል የወታደራዊ መታወቂያ ማረጋገጫ ገጽ
+# 1. ዲጂታል የወታደራዊ መታወቂያ ማረጋገጫ ገጽ
 class IDVerificationScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -28,7 +17,7 @@ class IDVerificationScreen(Screen):
         
         # ዋና ርዕስ
         layout.add_widget(Label(
-            text="🪪 DIGITAL MILITARY ID VERIFICATION\nበዲጂታል ወታደራዊ መታወቂያ ማረጋገጫ",
+            text="DIGITAL MILITARY ID VERIFICATION\nበዲጂታል ወታደራዊ መታወቂያ ማረጋገጫ",
             font_size=18,
             bold=True,
             halign='center',
@@ -38,13 +27,13 @@ class IDVerificationScreen(Screen):
         
         # የስም ማስገቢያ ርዕስ
         layout.add_widget(Label(
-            text="የኦፕሬተር ሙሉ ስም / Operator Full Name:",
+            text="የአሠሪው ሙሉ ስም / Operator Full Name:",
             size_hint_y=None,
             height=25,
             font_name=AMHARIC_FONT
         ))
         
-        # የስም ማስገቢያ ሳጥን (የአማርኛ ፎንት ተጨምሮበታል)
+        # የስም ማስገቢያ ሣጥን
         self.name_input = TextInput(
             multiline=False,
             size_hint_y=None,
@@ -61,7 +50,7 @@ class IDVerificationScreen(Screen):
             font_name=AMHARIC_FONT
         ))
         
-        # የመታወቂያ ቁጥር ማስገቢያ ሳጥን (የአማርኛ ፎንት ተጨምሮበታል)
+        # የመታወቂያ ቁጥር ማስገቢያ ሣጥን
         self.id_input = TextInput(
             multiline=False,
             size_hint_y=None,
@@ -93,19 +82,19 @@ class IDVerificationScreen(Screen):
         layout.add_widget(btn)
         
         self.add_widget(layout)
-        
+
     def verify_id(self, instance):
         name = self.name_input.text.strip()
         id_num = self.id_input.text.strip()
         
         if not name or not id_num:
-            self.status_label.text = "❌ እባክህ ስም እና መታወቂያ ቁጥር አስገባ!"
+            self.status_label.text = "❌ እባክዎ ስም እና መታወቂያ ቁጥር ያስገቡ!"
             return
             
-        # እዚህ ጋር የእርስዎ የስም ማረጋገጫ እና የይለፍ ቃል ገጽ መሸጋገሪያ ምሳሌ አለ
+        # መረጃው ከተሞላ ወደ ሚስጥር ቃል ገጽ ይሻገራል
         self.manager.current = 'password'
 
-# 2️⃣ የይለፍ ቃል ገጽ
+# 2. የይለፍ ቃል ገጽ
 class PasswordScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -147,14 +136,14 @@ class PasswordScreen(Screen):
         layout.add_widget(self.error_label)
         
         self.add_widget(layout)
-        
+
     def check_password(self, instance):
         if self.password_input.text == "7788":
             self.manager.current = 'main'
         else:
             self.error_label.text = "❌ INVALID PASSWORD! / የተሳሳተ ነው!"
 
-# 3️⃣ ዋናው የሰራተኛ ገጽ
+# 3. ዋናው የሰራተኛ ገጽ
 class MainScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -163,14 +152,14 @@ class MainScreen(Screen):
         layout.bind(minimum_height=layout.setter('height'))
         
         layout.add_widget(Label(
-            text="ሰላም ሰላም እና መታወቂያ ቁጥር አስገቡ!",
+            text="ሰላም ሰላም እና መታወቂያ ቁጥር አስገብተዋል!",
             size_hint_y=None,
             height=40,
             font_name=AMHARIC_FONT
         ))
         
         layout.add_widget(Label(
-            text="ማሳሰቢያ፤ ወደፊት የተለየ ቁጥር መገደብ ይቻላል::",
+            text="ማሳሰቢያ፤ ወደፊት የተለየ ቁጥር መግለጽ ይቻላል::",
             size_hint_y=None,
             height=40,
             font_name=AMHARIC_FONT
