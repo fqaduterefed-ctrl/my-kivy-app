@@ -25,7 +25,6 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    # Buildozer ፋይሎችን በፍጥነት እንዲያገኝ የሚያደርግ መሸጎጫ (Cache)
     - name: Cache Buildozer global directory
       uses: actions/cache@v4
       with:
@@ -57,17 +56,21 @@ jobs:
 
     - name: Build with Buildozer
       run: |
-        # ሎጉ በጣም ትልቅ እንዳይሆን እና GitHub እንዳያቋርጠው ዝምተኛ (Silent) እንዲሆን ያደርጋል
         buildozer -v android debug
       env:
-        # Buildozer የራሱን SDK/NDK በራሱ መንገድ እንዲያዘጋጅ ይተወዋል
         GRADLE_OPTS: "-Dorg.gradle.daemon=false"
 
+    # የትኛው ደረጃ ላይ እንደተሰበረ ለማወቅ ሎግ ፋይሉን ሁልጊዜ እንዲጭን (Upload) እናደርጋለን
+    - name: Upload Logs on Failure
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: buildozer-error-logs
+        path: .buildozer/android/platform/build-arm64-v8a_armeabi-v7a/build/other_builds/python3/arm64-v8a__ndk_target_24/python3/
+
     - name: Upload APK Artifact
-      if: always() # ግንባታው ቢሳካም ባይሳካም ሎጉን ለማየት እንዲረዳን
+      if: success()
       uses: actions/upload-artifact@v4
       with:
         name: my-android-app
-        path: |
-          bin/*.apk
-          .buildozer/android/platform/build-*/build/logs/*.log
+        path: bin/*.apk
