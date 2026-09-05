@@ -27,7 +27,6 @@ jobs:
     - name: Set up Android SDK
       uses: android-actions/setup-android@v3
 
-    # የድሮውን የተበላሸ Cache ሙሉ በሙሉ ለማስወገድ ይረዳናል
     - name: Clean Previous Cache
       run: |
         rm -rf ~/.buildozer
@@ -41,7 +40,7 @@ jobs:
     - name: Install Buildozer
       run: pip install --upgrade buildozer Cython==3.0.11
 
-    # ሙሉ በሙሉ ከባዶ ንጹህ የኬቪ አፕሊኬሽን እንዲሰራ ትዕዛዝ ሰጥተነዋል
     - name: Build with Buildozer
       run: |
+        export hostpython=/opt/hostedtoolcache/Python/3.11.*/x64/bin/python
         buildozer android debug
