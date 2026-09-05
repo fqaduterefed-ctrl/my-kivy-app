@@ -24,11 +24,11 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    # ይህ እርምጃ Buildozer ራሱ አውርዶ እንዳይጨናነቅ ቀድሞ አንድሮይድ SDK ያዘጋጃል
+    # GitHub Actions ራሱ SDKን አስቀድሞ እንዲያዘጋጅ ማድረግ
     - name: Set up Android SDK
       uses: android-actions/setup-android@v3
 
-    # የቆዩ የ Buildozer ስህተቶችን ለማጽዳት Cache መጠቀም
+    # የቆዩ የ Buildozer ፋይሎችን ለፍጥነት Cache ማድረግ
     - name: Cache Buildozer Packages
       uses: actions/cache@v4
       with:
@@ -37,11 +37,11 @@ jobs:
           .buildozer
         key: ${{ runner.os }}-buildozer-${{ hashFiles('buildozer.spec') }}
 
-    # ስርዓቱ የሚፈልጋቸውን የሊኑክስ መተግበሪያዎች አስቀድሞ መጫን
+    # እዚህ ጋር ሁሉንም ጥያቄዎች በራስ-ሰር "Y" (Yes) ብሎ እንዲያልፍ አድርገነዋል
     - name: Install Dependencies
       run: |
-        sudo apt-get update
-        sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libssl-dev cmake
+        sudo apt-get update --fix-missing
+        sudo apt-get install -y --no-install-recommends git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libssl-dev cmake
 
     # Buildozerን መጫን እና ማሄድ
     - name: Install Buildozer
