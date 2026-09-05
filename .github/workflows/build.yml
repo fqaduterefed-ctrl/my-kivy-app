@@ -24,30 +24,24 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    # GitHub Actions ራሱ SDKን አስቀድሞ እንዲያዘጋጅ ማድረግ
     - name: Set up Android SDK
       uses: android-actions/setup-android@v3
 
-    # የቆዩ የ Buildozer ፋይሎችን ለፍጥነት Cache ማድረግ
-    - name: Cache Buildozer Packages
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/.buildozer
-          .buildozer
-        key: ${{ runner.os }}-buildozer-${{ hashFiles('buildozer.spec') }}
+    # የድሮውን የተበላሸ Cache ሙሉ በሙሉ ለማስወገድ ይረዳናል
+    - name: Clean Previous Cache
+      run: |
+        rm -rf ~/.buildozer
+        rm -rf .buildozer
 
-    # እዚህ ጋር ሁሉንም ጥያቄዎች በራስ-ሰር "Y" (Yes) ብሎ እንዲያልፍ አድርገነዋል
     - name: Install Dependencies
       run: |
         sudo apt-get update --fix-missing
         sudo apt-get install -y --no-install-recommends git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libssl-dev cmake
 
-    # Buildozerን መጫን እና ማሄድ
     - name: Install Buildozer
       run: pip install --upgrade buildozer Cython==3.0.11
 
+    # ሙሉ በሙሉ ከባዶ ንጹህ የኬቪ አፕሊኬሽን እንዲሰራ ትዕዛዝ ሰጥተነዋል
     - name: Build with Buildozer
       run: |
-        buildozer android clean
         buildozer android debug
