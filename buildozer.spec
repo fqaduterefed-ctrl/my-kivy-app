@@ -8,8 +8,8 @@ source.include_exts = py,png,jpg,kv,atlas,ttf,otf
 source.include_filters = *.ttf, *.otf, *.py
 version = 0.1
 
-# ለየትኛው የፓይተን ስሪት መገንባት እንዳለበት እዚህ ጋር በግልጽ አስገድደነዋል
-requirements = python3==3.11.5,kivy==2.3.0
+# ለየትኛው የፓይተን ስሪት መገንባት እንዳለበት እዚህ ጋር በግልጽ አስገድደነዋል (hostpython3 እዚህ ላይ ተጨምሯል)
+requirements = python3==3.11.5, hostpython3==3.11.5, kivy==2.3.0
 
 android.api = 33
 android.ndk = 25b
