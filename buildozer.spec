@@ -8,15 +8,15 @@ source.include_exts = py,png,jpg,kv,atlas,ttf,otf
 source.include_filters = *.ttf, *.otf, *.py
 version = 0.1
 
-# ለየትኛው የፓይተን ስሪት መገንባት እንዳለበት እዚህ ጋር በግልጽ አስገድደነዋል (hostpython3 እዚህ ላይ ተጨምሯል)
+# ስሪቱ በትክክል እዚህ ላይ ተስተካክሏል
 requirements = python3==3.11.5, hostpython3==3.11.5, kivy==2.3.0
 
 android.api = 33
 android.ndk = 25b
 android.minapi = 24
 
-# Buildozer አላስፈላጊ የሆኑ የፓይተን የሙከራ (test) ፋይሎችን ሰርዞ እንዲጥል የሚያዝዘው መስመር
-android.p4a_extra_args = --exclude-dirs=test,tests
+# የ Kivy እና Python የሙከራ (test) ፋይሎች ገብተው ሰዓት እንዳይበሉ እዚህ ጋ ሙሉ በሙሉ አግደናቸዋል
+android.p4a_extra_args = --exclude-dirs=test,tests,testing,unittest
 
 p4a.branch = master
 fullscreen = 0
