@@ -15,8 +15,8 @@ android.api = 33
 android.ndk = 25b
 android.minapi = 24
 
-# የ Kivy እና Python የሙከራ (test) ፋይሎች ገብተው ሰዓት እንዳይበሉ እዚህ ጋ ሙሉ በሙሉ አግደናቸዋል
-android.p4a_extra_args = --exclude-dirs=test,tests,testing,unittest
+# የ Kivy እና Python ሰዓት የሚበሉ ማሳያ፣ የሙከራ እና የትምህርት ፋይሎችን በሙሉ እዚህ ጋር በዝርዝር አግደናል
+android.p4a_extra_args = --exclude-dirs=test,tests,testing,unittest,turtledemo,tkinter,ensurepip,idlelib,pydoc_data
 
 p4a.branch = master
 fullscreen = 0
